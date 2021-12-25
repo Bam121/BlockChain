@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="main.css">
+    
+</head>
+<body>
+    <div class="fronte">
+        <section class="upper">
+            <section>
+                <h1><span>Welcome To </span>SafeBank</h1>
+            </section class="info">
+            <p>Thank You For Visiting Our SafeBank</p>
+            <p>Here we provide a safe and secure environment, where we take care of YOU and YOUR MONEY. </p>
+            <p>Your account now safer than ever.</p>
+        </section>
+        <section class="lower">
+            <div class="balc">
+                <h1>Dear User your Bank Balance is:</h1>
+                <p id='balance'></p> 
+            </div>
+            <div class="trans"> 
+                <section class="input">
+                    <h1>Enter your Amount here:- </h1>
+                    <input type="text" id="amount"> 
+                </section>
+                <section class="buttons">
+                    <h1>Please Select your Transaction </h1>
+                    <button id='deposit'>Deposit</button>
+                    <button id='withdraw'>Withdraw</button>
+                </section>
+                
+                
+            </div>
+        </section>
+        
+
+    </div>
+    
+    <script src="https://unpkg.com/@metamask/legacy-web3@latest/dist/metamask.web3.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.2/web3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+     crossorigin="anonymous"></script>
+     <script>"js/script.js"</script>
+
+    <script>
+        var contract;
+        $(document).ready(function () {
+            web3 = new Web3(web3.currentProvider);
+
+            var address = "0xb86Fcd30b640e3CeFbBdBE537f4FdF83ef93214D";
+            var abi = [
+
+            
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "int256",
+				"name": "amt",
+				"type": "int256"
+			}
+		],
+		"name": "deposit",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getBalance",
+		"outputs": [
+			{
+				"internalType": "int256",
+				"name": "",
+				"type": "int256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "int256",
+				"name": "amt",
+				"type": "int256"
+			}
+		],
+		"name": "withdraw",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
+
+            ];
+
+            contract = new web3.eth.Contract(abi, address);
+
+            contract.methods.getBalance().call().then(function (bal) {
+                $('#balance').html(bal);
+            })
+        })
+
+        $('#deposit').click(function () {
+            var amt = 0;
+            amt = parseInt($('#amount').val());
+
+            web3.eth.getAccounts().then(function (accounts) {
+                var acc = accounts[0];
+                return contract.methods.deposit(amt).send({ from: acc });
+            }).then(function (tx) {
+                console.log(tx);
+            }).catch(function (tx) {
+                console.log(tx);
+            })
+        })
+
+        $('#withdraw').click(function () {
+            var amt = 0;
+            amt = parseInt($('#amount').val());
+
+            web3.eth.getAccounts().then(function (accounts) {
+                var acc = accounts[0];
+                return contract.methods.withdraw(amt).send({ from: acc });
+            }).then(function (tx) {
+                console.log(tx);
+            }).catch(function (tx) {
+                console.log(tx);
+            })
+        })
+
+    </script>
+</body>
+</html>
